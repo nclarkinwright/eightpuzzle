@@ -18,7 +18,24 @@ class Puzzle():
 
     def moves(self):
         """Return a list of possible moves given the current configuration."""
-        # YOU FILL THIS IN
+        # Open space is (y, x)
+        open_space = self.find_open_space()
+        possible_moves = []
+
+        if open_space == None:
+            return possible_moves
+
+        # Check if on edge, if not, then move is possible
+        if open_space[0] != 0:
+            possible_moves.append('N')
+        if open_space[0] != len(self.grid) - 1:
+            possible_moves.append('S')
+        if open_space[1] != 0:
+            possible_moves.append('W')
+        if open_space[0] != len(self.grid[open_space[0]]) - 1:
+            possible_moves.append('E')
+
+        return possible_moves
 
     def neighbor(self, move):
         """Return a Puzzle instance like this one but with one move made."""
@@ -27,6 +44,14 @@ class Puzzle():
     def h(self, goal):
         """Compute the distance heuristic from this instance to the goal."""
         # YOU FILL THIS IN
+    
+    def find_open_space(self):
+        # Return tuple of location of empty space on grid (y, x)
+        for y in range(0, len(self.grid)):
+            for x in range(0, len(self.grid[y])):
+                if self.grid[y][x] == ' ':
+                    return (y,x)
+        return None
 
 class Agent():
     """Knows how to solve a sliding-block puzzle with A* search."""
