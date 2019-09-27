@@ -12,9 +12,9 @@ class Puzzle():
         """Print the puzzle."""
         for row in self.grid:
             for number in row:
-                print(number)
-            print
-        print
+                print(number, end = ' ')
+            print()
+        print()
 
     def moves(self):
         """Return a list of possible moves given the current configuration."""
@@ -39,7 +39,25 @@ class Puzzle():
 
     def neighbor(self, move):
         """Return a Puzzle instance like this one but with one move made."""
-        # YOU FILL THIS IN
+        open_space = self.find_open_space()
+        y = open_space[0]
+        x = open_space[1]
+        moved_puzzle = Puzzle(self.grid)
+
+        if move == 'N':
+            moved_puzzle.grid[y][x] = moved_puzzle.grid[y - 1][x]
+            moved_puzzle.grid[y - 1][x] = ' '
+        if move == 'S':
+            moved_puzzle.grid[y][x] = moved_puzzle.grid[y + 1][x]
+            moved_puzzle.grid[y + 1][x] = ' '
+        if move == 'W':
+            moved_puzzle.grid[y][x] = moved_puzzle.grid[y][x - 1]
+            moved_puzzle.grid[y][x - 1] = ' '
+        if move == 'E':
+            moved_puzzle.grid[y][x] = moved_puzzle.grid[y][x + 1]
+            moved_puzzle.grid[y][x + 1] = ' '
+        
+        return moved_puzzle
 
     def h(self, goal):
         """Compute the distance heuristic from this instance to the goal."""
