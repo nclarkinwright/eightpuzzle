@@ -39,7 +39,7 @@ class Puzzle():
 
     def neighbor(self, move):
         """Return a Puzzle instance like this one but with one move made."""
-        open_space = self.find_open_space()
+        open_space = self.find_position(' ')
         y = open_space[0]
         x = open_space[1]
         moved_puzzle = Puzzle(self.grid)
@@ -61,13 +61,32 @@ class Puzzle():
 
     def h(self, goal):
         """Compute the distance heuristic from this instance to the goal."""
-        # YOU FILL THIS IN
-    
+        # Number of moves away from goal
+        blocks = [' ', 1, 2, 3, 4, 5, 6, 7, 8]
+        y_moves = 0
+        x_moves = 0
+
+        for block in blocks:
+            position = self.find_position(block)
+            goal_position = goal.find_position(block)
+            y_moves = y_moves + abs(goal_position[0] - position[0])
+            x_moves = x_moves + abs(goal_position[1] - position[1])
+        # Add total number of y and x moves
+        return y_moves + x_moves
+
     def find_open_space(self):
         # Return tuple of location of empty space on grid (y, x)
         for y in range(0, len(self.grid)):
             for x in range(0, len(self.grid[y])):
                 if self.grid[y][x] == ' ':
+                    return (y,x)
+        return None
+
+    def find_position(self, block):
+        # Return tuple of location of supplied block (y, x)
+        for y in range(0, len(self.grid)):
+            for x in range(0, len(self.grid[y])):
+                if self.grid[y][x] == block:
                     return (y,x)
         return None
 
