@@ -1,5 +1,6 @@
 import copy
 import time
+import heapq
 
 class Puzzle():
     """A sliding-block puzzle."""
@@ -90,12 +91,34 @@ class Puzzle():
                     return (y,x)
         return None
 
+    def __eq__(self, other):
+        return self.grid == self.other
+
+    def __ne__(self, other):
+        return self.grid != self.other
+
+    def __hash__(self):
+        return hash(tuple(self.grid))
+
 class Agent():
     """Knows how to solve a sliding-block puzzle with A* search."""
 
     def astar(self, puzzle, goal):
         """Return a list of moves to get the puzzle to match the goal."""
         # YOU FILL THIS IN
+        # heap priority is child.h(goal) + number of moves made from start
+        # place heap value in first part of tuple
+        # add entry value to break ties
+        # to track moves made and find shortest path in dict:
+        # (puzzle, move made to reach current state, # of moves made from start)
+
+        finished = set()
+        frontier = heapq()
+        path = dict()
+        entry_value = 0
+
+        
+
 
 def main():
     """Create a puzzle, solve it with A*, and console-animate."""
