@@ -66,15 +66,15 @@ class Puzzle():
     def h(self, goal):
         """Compute the distance heuristic from this instance to the goal."""
         # Number of moves away from goal
-        blocks = [' ', 1, 2, 3, 4, 5, 6, 7, 8]
         y_moves = 0
         x_moves = 0
 
-        for block in blocks:
-            position = self.find_position(block)
-            goal_position = goal.find_position(block)
-            y_moves = y_moves + abs(goal_position[0] - position[0])
-            x_moves = x_moves + abs(goal_position[1] - position[1])
+        for row in self.grid:
+            for block in row:
+                position = self.find_position(block)
+                goal_position = goal.find_position(block)
+                y_moves = y_moves + abs(goal_position[0] - position[0])
+                x_moves = x_moves + abs(goal_position[1] - position[1])
         # Add total number of y and x moves
         return y_moves + x_moves
 
