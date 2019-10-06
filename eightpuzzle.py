@@ -1,3 +1,6 @@
+# Nicholas Clarkin-Wright
+# nc819094@wcupa.edu
+
 import copy
 import time
 import heapq
@@ -27,15 +30,15 @@ class Puzzle():
             return possible_moves
 
         # Check if on edge, if not, then move is possible
-        if open_space[0] != 0:
+        if open_space[0] > 0:
             possible_moves.append('N')
         if open_space[0] != len(self.grid) - 1:
             possible_moves.append('S')
-        if open_space[1] != 0:
+        if open_space[1] > 0:
             possible_moves.append('W')
-        if open_space[0] != len(self.grid[open_space[0]]) - 1:
+        if open_space[1] != len(self.grid[open_space[0]]) - 1:
             possible_moves.append('E')
-
+                
         return possible_moves
 
     def neighbor(self, move):
@@ -92,32 +95,71 @@ class Puzzle():
         return None
 
     def __eq__(self, other):
-        return self.grid == self.other
+        return self.grid == other.grid
 
     def __ne__(self, other):
-        return self.grid != self.other
+        return self.grid != other.grid
 
     def __hash__(self):
-        return hash(tuple(self.grid))
+        return hash(str(self.grid))
 
 class Agent():
     """Knows how to solve a sliding-block puzzle with A* search."""
 
     def astar(self, puzzle, goal):
         """Return a list of moves to get the puzzle to match the goal."""
-        # YOU FILL THIS IN
-        # heap priority is child.h(goal) + number of moves made from start
-        # place heap value in first part of tuple
-        # add entry value to break ties
-        # to track moves made and find shortest path in dict:
-        # (puzzle, move made to reach current state, # of moves made from start)
-
+        # finished = set(puzzle_1, puzzle_2, etc.)
+        # frontier = heapq((heuristic_value, entry count, puzzle), ...)
+        # path = dict((puzzle: [moves_made_from_start]))
         finished = set()
-        frontier = heapq()
+        frontier = []
         path = dict()
         entry_value = 0
 
+        # Stop and return no moves if start is same as goal
+        if puzzle == goal:
+            return []
         
+        # Add start to frontier to begin loop; increment entry counter
+        heapq.heappush(frontier, (puzzle.h(goal), entry_value, puzzle))
+        entry_value += 1
+        path.setdefault(puzzle, [])
+
+        while (frontier != set()):
+            # Get parent off frontier
+            parent = heapq.heappop(frontier)
+            parent_puzzle = parent[2]
+            finished.add(parent_puzzle)
+
+            # Check if parent is goal; if so stop
+            if parent_puzzle == goal:
+                break
+            
+            # Get list of possible moves from parent state
+            # Loop through each possible state
+            children = parent_puzzle.moves()
+            for move in children:
+                child = parent_puzzle.neighbor(move)
+                parent_moves = path.get(parent_puzzle)
+                child_moves = [*parent_moves, move]
+
+                # Get frontier heap into usable check
+                frontier_puzzle_list = [z for (x, y, z) in frontier]
+                
+                # Add child if not already in explored
+                if child not in frontier_puzzle_list and child not in finished:
+                    path.setdefault(child, child_moves)
+                    heapq.heappush(frontier, (child.h(goal) + len(child_moves), entry_value, child))
+                    entry_value += 1
+
+                # Change path if current child has shorter path
+                if child in path:
+                    if len(path.get(child)) > len(child_moves):
+                        path.setdefault(child_moves)
+            
+        # Return 
+        return path.get(goal)
+                        
 
 
 def main():
